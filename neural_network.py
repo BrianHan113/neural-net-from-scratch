@@ -14,29 +14,31 @@ class NeuralNetwork(object):
         # weights[0] == weights of first non-input layer, 
         # weights[1] == weights of 2nd non-input layer, 
         # etc, same for biases
-
-        self.zs = [] # Store calculated Z values for each layer during forwardProp
     
     def forwardProp(self, input, y):
-        self.zs = [] # Clear previous Z values
+        zs = [] # Store Z values
+        As = [] # Store A values
         A = input
         layer_num = 1 # Assuming input layer is layer 0
 
         for b, w in zip(self.biases, self.weights):
 
             z = np.dot(w, A) + b
-            self.zs.append(z)
+            zs.append(z)
             
             # Apply softmax to the output layer and return the cost
             if (layer_num == len(self.sizes) - 1):
                 A = softmax(z)
                 print("Softmax layer {}".format(layer_num))
+                As.append(A)
                 print(A)
-                return mse(A, y)
+                cost = mse(A, y)
+                return (cost, zs, As)
             # Otherwise, apply ReLU
             else:
                 A = relu(z)
                 print("Relu layer {}".format(layer_num))
+                As.append(A)
                 print(A)
                 layer_num += 1
                 continue
@@ -47,9 +49,26 @@ class NeuralNetwork(object):
         partial_b = -1
         return (partial_w, partial_b)
 
-    def train(self, training_data, epochs, learning_rate):
+    def train(self, train_data, epochs, learning_rate):
         for epoch in range(1, epochs+1):
-            print(epoch)
+            print("Epoch: " + str(epoch))
+            np.random.shuffle(train_data)
+            
+            costs = [] # Store the cost of each training example per epoch
+
+            testing = 0
+            for sample in train_data:
+
+                cost, zs, As = self.forwardProp(sample[0], sample[1])
+                costs.append(cost)
+
+                testing += 1
+                if (testing == 1):
+                    print(costs)
+                    print(zs)
+                    print(As)
+                    break
+            
         return
 
 
