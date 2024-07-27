@@ -1,6 +1,6 @@
 from keras.datasets import mnist
 from keras.utils import to_categorical
-from neural_network import Network
+from neural_network import NeuralNetwork
 
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 # normalize pixel value from uint8 to 0-1
@@ -13,10 +13,13 @@ x_test = x_test.reshape(-1, 784,1)
 y_train = to_categorical(y_train, 10)
 y_test = to_categorical(y_test, 10)
 
-# print(x_train[0])
-# print(y_train[0])
+# Common convention to keep data and label in tuples
+train_data = list(zip(x_train, y_train))
+test_data = list(zip(x_test, y_test))
 
-n = Network([784,15,10,10])
-# print(n.biases[0])
+n = NeuralNetwork([784,15,10,10])
 
-print(n.forwardProp(x_train[0], y_train[0]))
+EPOCHS = 2
+LEARNING_RATE = 0.01
+
+n.train(train_data, EPOCHS, LEARNING_RATE)
