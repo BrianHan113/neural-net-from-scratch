@@ -46,12 +46,14 @@ class NeuralNetwork(object):
 
     def backProp(self, zs, As, y):
 
+        y = y.reshape(-1, 1)
+
         # Initialize gradients
         partial_w = [np.zeros(w.shape) for w in self.weights]
         partial_b = [np.zeros(b.shape) for b in self.biases]
 
         # Output layer
-        partial_z = msePrime(As[-1], y) * softmaxPrime(zs[-1])
+        partial_z = np.dot(softmaxPrime(zs[-1]), msePrime(As[-1], y))
         partial_w[-1] = np.dot(partial_z, As[-2].transpose())
         partial_b[-1] = partial_z
 
@@ -98,18 +100,31 @@ class NeuralNetwork(object):
 def mse(y_pred, y_true):
     return np.mean((y_pred - y_true) ** 2)
 
-def msePrime(A, y):
-    return 2(A-y)
+def msePrime(y_pred, y_true):
+    # Dont include the 1/m factor - see notes
+    return 2*(y_pred - y_true)
 
 def relu(z):
     return np.maximum(0, z)
 
-def reluPrime():
-    return
+def reluPrime(z):
+    # Derivative of ReLU is a step function
+    # Return 1 for z > 0, otherwise return 0
+    return np.where(z > 0, 1, 0)
 
 def softmax(z):
-    exp_z = np.exp(z - np.max(z))
+    # -max improves numerical stability
+    exp_z = np.exp(z - np.max(z, axis=0, keepdims=True))
     return exp_z / np.sum(exp_z, axis=0, keepdims=True)
 
-def softmaxPrime():
-    return
+def softmaxPrime(z):
+    s = softmax(z)
+    # s is (num_classes, batch_size)
+    
+    # Reshape s to (num_classes, num_classes, batch_size) for Jacobian matrix computation
+    s = s.reshape(-1, 1)
+    s_j = s.T  # Transpose to (batch_size, num_classes)
+    
+    # Jacobian matrix computation
+    J = np.diagflat(s.flatten()) - np.dot(s, s_j)
+    return J
