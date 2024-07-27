@@ -29,25 +29,29 @@ class NeuralNetwork(object):
             # Apply softmax to the output layer and return the cost
             if (layer_num == len(self.sizes) - 1):
                 A = softmax(z)
-                print("Softmax layer {}".format(layer_num))
                 As.append(A)
-                print(A)
+                # print("Softmax layer {}".format(layer_num))
+                # print(A)
                 cost = mse(A, y)
                 return (cost, zs, As)
             # Otherwise, apply ReLU
             else:
                 A = relu(z)
-                print("Relu layer {}".format(layer_num))
                 As.append(A)
-                print(A)
+                # print("Relu layer {}".format(layer_num))
+                # print(A)
                 layer_num += 1
                 continue
 
-    def backProp(self):
+    def backProp(self, zs, As):
         # TODO: implement
         partial_w = -1
         partial_b = -1
         return (partial_w, partial_b)
+    
+    def updateParams(self, partial_w, partial_b, learning_rate):
+        # TODO: implement
+        return
 
     def train(self, train_data, epochs, learning_rate):
         for epoch in range(1, epochs+1):
@@ -61,13 +65,14 @@ class NeuralNetwork(object):
 
                 cost, zs, As = self.forwardProp(sample[0], sample[1])
                 costs.append(cost)
+                partial_w, partial_b = self.backProp(zs, As)
+                self.updateParams(partial_w, partial_b, learning_rate)
 
                 testing += 1
-                if (testing == 1):
-                    print(costs)
-                    print(zs)
-                    print(As)
+                if (testing == 2):
                     break
+            
+            print(costs)
             
         return
 
