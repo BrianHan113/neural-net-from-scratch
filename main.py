@@ -37,9 +37,9 @@ test_data = list(zip(x_test, y_test))
 # display_image(first_image)
 # print("Label:", first_label)
 
-n = NeuralNetwork([784,15,10,10])
-EPOCHS = 5
-LEARNING_RATE = 0.01
+n = NeuralNetwork([784,5,10])
+EPOCHS = 10
+LEARNING_RATE = 0.006
 
 n.train(train_data, EPOCHS, LEARNING_RATE)
 n.evaluate(test_data)

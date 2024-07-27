@@ -110,7 +110,7 @@ class NeuralNetwork(object):
             if (np.argmax(y_pred) == np.argmax(sample[1])):
                 correct_count += 1
 
-        print("{}% Accuracy".format((correct_count / len(test_data)) * 100))
+        print("{:.2f}% Accuracy".format((correct_count / len(test_data)) * 100))
 
 
 def mse(y_pred, y_true):
