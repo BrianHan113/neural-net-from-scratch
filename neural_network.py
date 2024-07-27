@@ -69,8 +69,9 @@ class NeuralNetwork(object):
         return (partial_w, partial_b)
     
     def updateParams(self, partial_w, partial_b, learning_rate):
-        # TODO: implement
-        return
+        for layer in range(len(self.weights)):
+            self.weights[layer] -= learning_rate * partial_w[layer]
+            self.biases[layer] -= learning_rate * partial_b[layer]
 
     def train(self, train_data, epochs, learning_rate):
         for epoch in range(1, epochs+1):
@@ -89,9 +90,9 @@ class NeuralNetwork(object):
                 partial_w, partial_b = self.backProp(zs, As, sample[1])
                 self.updateParams(partial_w, partial_b, learning_rate)
 
-                testing += 1
-                if (testing == 1):
-                    break
+                # testing += 1
+                # if (testing == 1):
+                #     break
             
             print("Average cost: ", np.mean(costs))
         return
