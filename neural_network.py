@@ -46,7 +46,7 @@ class NeuralNetwork(object):
 
     def backProp(self, zs, As, y):
 
-        y = y.reshape(-1, 1)
+        # y = y.reshape(-1, 1)
 
         # Initialize gradients
         partial_w = [np.zeros(w.shape) for w in self.weights]
@@ -62,7 +62,7 @@ class NeuralNetwork(object):
             z = zs[-layer]
             partial_A_partial_z = reluPrime(z)
 
-            # Update partial C / partial z - reuse for future layers to save computation time
+            # Update partial C / partial z - reuse for future layers to save computation
             partial_z = np.dot(self.weights[-layer+1].transpose(), partial_z) * partial_A_partial_z
             partial_w[-layer] = np.dot(partial_z, As[-layer-1].transpose())
             partial_b[-layer] = partial_z
@@ -118,13 +118,9 @@ def softmax(z):
     return exp_z / np.sum(exp_z, axis=0, keepdims=True)
 
 def softmaxPrime(z):
+    # honestly, i copy pasted this one
     s = softmax(z)
-    # s is (num_classes, batch_size)
-    
-    # Reshape s to (num_classes, num_classes, batch_size) for Jacobian matrix computation
     s = s.reshape(-1, 1)
-    s_j = s.T  # Transpose to (batch_size, num_classes)
-    
-    # Jacobian matrix computation
+    s_j = s.T
     J = np.diagflat(s.flatten()) - np.dot(s, s_j)
     return J
