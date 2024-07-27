@@ -19,6 +19,7 @@ class NeuralNetwork(object):
         zs = [] # Store Z values
         As = [] # Store A values
         A = input
+        As.append(A)
         layer_num = 1 # Assuming input layer is layer 0
 
         for b, w in zip(self.biases, self.weights):
@@ -43,10 +44,26 @@ class NeuralNetwork(object):
                 layer_num += 1
                 continue
 
-    def backProp(self, zs, As):
-        # TODO: implement
-        partial_w = -1
-        partial_b = -1
+    def backProp(self, zs, As, y):
+
+        # Initialize gradients
+        partial_w = [np.zeros(w.shape) for w in self.weights]
+        partial_b = [np.zeros(b.shape) for b in self.biases]
+
+        # Output layer
+        partial_z = msePrime(As[-1], y) * softmaxPrime(zs[-1])
+        partial_w[-1] = np.dot(partial_z, As[-2].transpose())
+        partial_b[-1] = partial_z
+
+        # Propogate backwards through each layer, up to the input layer
+        for layer in range(2, self.num_layers):
+            z = zs[-layer]
+            partial_A_partial_z = reluPrime(z)
+
+            # Update partial C / partial z - reuse for future layers to save computation time
+            partial_z = np.dot(self.weights[-layer+1].transpose(), partial_z) * partial_A_partial_z
+            partial_w[-layer] = np.dot(partial_z, As[-layer-1].transpose())
+            partial_b[-layer] = partial_z
         return (partial_w, partial_b)
     
     def updateParams(self, partial_w, partial_b, learning_rate):
@@ -65,24 +82,34 @@ class NeuralNetwork(object):
 
                 cost, zs, As = self.forwardProp(sample[0], sample[1])
                 costs.append(cost)
-                partial_w, partial_b = self.backProp(zs, As)
+
+                # partial_x naming refers to the derivative: partial C / partial x
+                partial_w, partial_b = self.backProp(zs, As, sample[1])
                 self.updateParams(partial_w, partial_b, learning_rate)
 
                 testing += 1
-                if (testing == 2):
+                if (testing == 1):
                     break
             
-            print(costs)
-            
+            print("Average cost: ", np.mean(costs))
         return
 
 
 def mse(y_pred, y_true):
     return np.mean((y_pred - y_true) ** 2)
 
+def msePrime(A, y):
+    return 2(A-y)
+
 def relu(z):
     return np.maximum(0, z)
+
+def reluPrime():
+    return
 
 def softmax(z):
     exp_z = np.exp(z - np.max(z))
     return exp_z / np.sum(exp_z, axis=0, keepdims=True)
+
+def softmaxPrime():
+    return
