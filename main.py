@@ -2,9 +2,6 @@ from keras.datasets import mnist
 from keras.utils import to_categorical
 from neural_network import NeuralNetwork
 
-import matplotlib.pyplot as plt
-
-
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 # normalize pixel value from uint8 to 0-1
@@ -26,18 +23,7 @@ y_test = y_test.reshape(-1, 10, 1)
 train_data = list(zip(x_train, y_train))
 test_data = list(zip(x_test, y_test))
 
-# # Verify dataset by displaying an image
-# def display_image(image):
-#     plt.imshow(image.reshape(28, 28), cmap='gray')
-#     plt.axis('off')
-#     plt.show()
-
-# # Display the first image and its label from the training set
-# first_image, first_label = train_data[100]
-# display_image(first_image)
-# print("Label:", first_label)
-
-n = NeuralNetwork([784,5,10])
+n = NeuralNetwork([784,10,10])
 EPOCHS = 10
 LEARNING_RATE = 0.006
 

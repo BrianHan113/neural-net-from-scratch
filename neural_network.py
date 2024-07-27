@@ -35,22 +35,16 @@ class NeuralNetwork(object):
             if (layer_num == len(self.sizes) - 1):
                 A = softmax(z)
                 As.append(A)
-                # print("Softmax layer {}".format(layer_num))
-                # print(A)
                 cost = mse(A, y)
                 return (cost, zs, As)
             # Otherwise, apply ReLU
             else:
                 A = relu(z)
                 As.append(A)
-                # print("Relu layer {}".format(layer_num))
-                # print(A)
                 layer_num += 1
                 continue
 
     def backProp(self, zs, As, y):
-
-        # y = y.reshape(-1, 1)
 
         # Initialize gradients
         partial_w = [np.zeros(w.shape) for w in self.weights]
@@ -74,6 +68,7 @@ class NeuralNetwork(object):
     
     def updateParams(self, partial_w, partial_b, learning_rate):
         for layer in range(len(self.weights)):
+            # Gradient descent, converging to local minumum
             self.weights[layer] -= learning_rate * partial_w[layer]
             self.biases[layer] -= learning_rate * partial_b[layer]
 
@@ -84,7 +79,6 @@ class NeuralNetwork(object):
             
             costs = [] # Store the cost of each training example per epoch
 
-            testing = 0
             for sample in train_data:
 
                 cost, zs, As = self.forwardProp(sample)
@@ -93,10 +87,6 @@ class NeuralNetwork(object):
                 # partial_x naming refers to the derivative: partial C / partial x
                 partial_w, partial_b = self.backProp(zs, As, sample[1])
                 self.updateParams(partial_w, partial_b, learning_rate)
-
-                # testing += 1
-                # if (testing == 1):
-                #     break
             
             print("Average cost: ", np.mean(costs))
         return
