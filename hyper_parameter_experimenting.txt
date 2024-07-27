@@ -1,0 +1,61 @@
+n = NeuralNetwork([784,15,10,10])
+EPOCHS = 5
+LEARNING_RATE = 0.006
+
+Epoch: 1
+Average cost:  0.07601917995955025
+Epoch: 2
+Average cost:  0.059399179984012854
+Epoch: 3
+Average cost:  0.05393274602799181
+Epoch: 4
+Average cost:  0.05147914403178722
+Epoch: 5
+Average cost:  0.049849693637903106
+59.27% Accuracy
+
+--------------------------------------------------------
+
+n = NeuralNetwork([784,10,10])
+EPOCHS = 5
+LEARNING_RATE = 0.006
+
+Epoch: 1
+Average cost:  0.08450125739240019
+Epoch: 2
+Average cost:  0.05454567884734498
+Epoch: 3
+Average cost:  0.0444446333039144
+Epoch: 4
+Average cost:  0.03671126958369899
+Epoch: 5
+Average cost:  0.030633465728986654
+83.16% Accuracy
+
+---------------------------------------------------------
+
+n = NeuralNetwork([784,10,10])
+EPOCHS = 10
+LEARNING_RATE = 0.006
+
+Epoch: 1
+Average cost:  0.09911616684681515
+Epoch: 2
+Average cost:  0.045650868118961685
+Epoch: 3
+Average cost:  0.035621871594301
+Epoch: 4
+Average cost:  0.02897197932306382
+Epoch: 5
+Average cost:  0.024761982450435874
+Epoch: 6
+Average cost:  0.022795272857635017
+Epoch: 7
+Average cost:  0.02154955757099582
+Epoch: 8
+Average cost:  0.02050011953995564
+Epoch: 9
+Average cost:  0.019760228945763795
+Epoch: 10
+Average cost:  0.019029214053305567
+88.88% Accuracy
