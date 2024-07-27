@@ -38,7 +38,8 @@ test_data = list(zip(x_test, y_test))
 # print("Label:", first_label)
 
 n = NeuralNetwork([784,15,10,10])
-EPOCHS = 3
+EPOCHS = 5
 LEARNING_RATE = 0.01
 
 n.train(train_data, EPOCHS, LEARNING_RATE)
+n.evaluate(test_data)

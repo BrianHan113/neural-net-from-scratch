@@ -15,7 +15,11 @@ class NeuralNetwork(object):
         # weights[1] == weights of 2nd non-input layer, 
         # etc, same for biases
     
-    def forwardProp(self, input, y):
+    def forwardProp(self, sample):
+
+        input = sample[0]
+        y = sample[1]
+
         zs = [] # Store Z values
         As = [] # Store A values
         A = input
@@ -83,7 +87,7 @@ class NeuralNetwork(object):
             testing = 0
             for sample in train_data:
 
-                cost, zs, As = self.forwardProp(sample[0], sample[1])
+                cost, zs, As = self.forwardProp(sample)
                 costs.append(cost)
 
                 # partial_x naming refers to the derivative: partial C / partial x
@@ -96,6 +100,17 @@ class NeuralNetwork(object):
             
             print("Average cost: ", np.mean(costs))
         return
+    
+    def evaluate(self, test_data):
+        correct_count = 0
+        for sample in test_data:
+            _, _, A = self.forwardProp(sample)
+            y_pred = A[-1]
+
+            if (np.argmax(y_pred) == np.argmax(sample[1])):
+                correct_count += 1
+
+        print("{}% Accuracy".format((correct_count / len(test_data)) * 100))
 
 
 def mse(y_pred, y_true):
